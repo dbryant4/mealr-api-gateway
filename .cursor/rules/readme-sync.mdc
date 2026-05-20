@@ -1,0 +1,29 @@
+---
+description: Keep README.md accurate when gateway infra, scripts, or layout change
+alwaysApply: true
+---
+
+# README upkeep (mealr-api-gateway)
+
+When you change anything that affects **how the repo is used, deployed, or tested**, update **`README.md` in the same change** (same PR / same session).
+
+## Triggers (non-exhaustive)
+
+- **`infra/gateway_stack.py`**, **`infra/config.py`**: path mappings, `_MAPPINGS` list, config keys, outputs/exports, custom domain behavior.
+- **`app.py`**, **`cdk.json`**, **`requirements.txt`**, **`requirements-dev.txt`**
+- **`cdk-params.example.json`**, **`.gitignore`**
+
+## What to keep aligned
+
+1. **Table of contents** — Add/remove major sections; fix GitHub anchor links if headings change (see `.cursor/rules/markdown-toc.mdc` for TOC conventions).
+2. **Repository layout** table — Paths, filenames, and what each artifact does.
+3. **Path mappings** table — Must match every entry in `_MAPPINGS` in `infra/gateway_stack.py`.
+4. **Stack parameters** table — Must match `REQUIRED_KEYS` and optional fields in `infra/config.py`.
+5. **Prerequisites** — Python version, CDK CLI, ACM cert, downstream deploy requirements.
+6. **Deploy (AWS CDK)** — `cdk deploy`, `cdk-params.json` / `cdk-params.example.json`, asset bundling notes.
+7. **Troubleshooting** — New failure modes users will hit after your change.
+
+## Style
+
+- Prefer **accurate, minimal edits** over duplicating large blocks of infra code in the README.
+- If you rename or remove a path or script, **grep the repo** for old references and fix README matches.

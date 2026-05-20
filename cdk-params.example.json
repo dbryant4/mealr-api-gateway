@@ -1,0 +1,10 @@
+{
+  "MealrApiGateway": {
+    "ApiDomainName": "api.mealr.com",
+    "ApiDomainCertificateArn": "arn:aws:acm:us-east-1:000000000000:certificate/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+    "RecipesApiId": "xxxxxxxxxx",
+    "MealPlansApiId": "xxxxxxxxxx",
+    "AiApiId": "xxxxxxxxxx",
+    "ApiEndpointExportName": "mealr-api-gateway-CustomDomainTarget"
+  }
+}

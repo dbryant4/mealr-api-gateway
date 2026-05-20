@@ -1,0 +1,2 @@
+-r requirements.txt
+aws-cdk.cli>=2.170,<3

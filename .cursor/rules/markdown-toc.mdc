@@ -1,0 +1,27 @@
+---
+description: Require a table of contents in Markdown files with multiple sections
+globs: "**/*.md"
+alwaysApply: false
+---
+
+# Markdown table of contents
+
+When you **create** or **substantially edit** a Markdown file in this repo:
+
+1. **Add a “Table of contents” (or “Contents”) section** near the top, after the title/intro and **before** the first major `##` section — unless the file is **trivially short** (see exceptions below).
+
+2. **List every `##` (second-level) heading** in order. For long docs, you may also include selected `###` headings if that improves navigation.
+
+3. **Use working relative links** to heading anchors (GitHub-style: lowercase, spaces → `-`, strip most punctuation). Verify anchors match the rendered headings for the platform where the doc is read (default: GitHub).
+
+4. **Keep the TOC in sync** whenever you add, remove, rename, or reorder headings in that file.
+
+## Exceptions (TOC optional)
+
+- **Very short** files: roughly **under ~25 lines** or **a single `##` section** (only one major topic).
+- **Generated** Markdown you must not hand-edit (call this out in the rule only if applicable — prefer not generating TOC-less long docs).
+
+## Style
+
+- Prefer a horizontal rule (`---`) **above** and/or **below** the TOC block for visual separation when the doc is long.
+- Use a bullet list of links; avoid duplicating prose from the body in the TOC line text.
