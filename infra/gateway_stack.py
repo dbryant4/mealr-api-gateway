@@ -1,10 +1,19 @@
 """CDK stack: custom domain + base-path mappings to downstream HTTP API Gateways."""
 
+from pathlib import Path
+
 from aws_cdk import CfnOutput, Stack
 from aws_cdk import aws_apigatewayv2 as apigw
 from constructs import Construct
 
 from infra.config import GatewayConfig
+
+_VERSION = Path(__file__).resolve().parent.parent.joinpath("VERSION").read_text().strip()
+_STACK_DESCRIPTION = (
+    f"Mealr unified API gateway v{_VERSION}: regional custom domain and HTTP API "
+    "v2 base-path mappings (/recipes, /meal-plans, /shopping-lists, /ai) to "
+    "downstream service APIs. No Lambda, JWT, CORS, or business logic in this stack."
+)
 
 # base-path prefix → (downstream API ID field, logical CDK id suffix)
 _MAPPINGS: list[tuple[str, str]] = [
@@ -30,7 +39,7 @@ class GatewayStack(Stack):
         config: GatewayConfig,
         **kwargs: object,
     ) -> None:
-        super().__init__(scope, construct_id, **kwargs)
+        super().__init__(scope, construct_id, description=_STACK_DESCRIPTION, **kwargs)
 
         domain = apigw.CfnDomainName(
             self,
