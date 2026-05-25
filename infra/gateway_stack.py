@@ -72,6 +72,13 @@ class GatewayStack(Stack):
 
         CfnOutput(
             self,
+            "StackVersion",
+            description="Semver of this mealr-api-gateway release (from VERSION at synth time)",
+            value=_VERSION,
+        )
+
+        CfnOutput(
+            self,
             "CustomDomainTarget",
             description=(
                 "Regional domain name to use as your DNS alias/CNAME target "

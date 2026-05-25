@@ -136,7 +136,7 @@ With `cdk-params.json` filled in and the venv active:
 cdk deploy
 ```
 
-After deploy, the stack outputs **`CustomDomainTarget`** — the regional domain name to use as your DNS target (see [Custom domain DNS](#custom-domain-dns)).
+After deploy, the stack outputs **`CustomDomainTarget`** — the regional domain name to use as your DNS target (see [Custom domain DNS](#custom-domain-dns)) — and **`StackVersion`**, the semver of this release (from `VERSION` at synth time).
 
 ---
 
