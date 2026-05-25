@@ -10,8 +10,10 @@ When you change anything that affects **how the repo is used, deployed, or teste
 ## Triggers (non-exhaustive)
 
 - **`infra/gateway_stack.py`**, **`infra/config.py`**: path mappings, `_MAPPINGS` list, config keys, outputs/exports, custom domain behavior.
-- **`app.py`**, **`cdk.json`**, **`requirements.txt`**, **`requirements-dev.txt`**
+- **`app.py`**, **`cdk.json`**, **`requirements.txt`**, **`requirements-dev.txt`**, **`VERSION`**
 - **`cdk-params.example.json`**, **`.gitignore`**
+
+When the change warrants a version bump, follow **`.cursor/rules/semver.mdc`** and update **`VERSION`** in the same change.
 
 ## What to keep aligned
 

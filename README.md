@@ -1,5 +1,7 @@
 # mealr-api-gateway
 
+**Version:** see [`VERSION`](VERSION) (semver).
+
 Owns the **custom domain** (`api.mealr.com`) and **base-path mappings** that route traffic to each downstream Mealr service's API Gateway. No business logic, no Lambda, no auth — each service owns those entirely.
 
 ---
@@ -65,6 +67,7 @@ Each downstream API Gateway handles its own routing, Lambda integrations, and Co
 
 | Path | Purpose |
 | --- | --- |
+| `VERSION` | Semver for this repo (`MAJOR.MINOR.PATCH`); bump per `.cursor/rules/semver.mdc` |
 | `infra/gateway_stack.py` | CDK stack: `CfnDomainName` + four `CfnApiMapping` resources |
 | `infra/config.py` | Loads and validates `cdk-params.json` at synth time |
 | `app.py` | CDK `App` entrypoint; synth writes to `cdk.out/` |

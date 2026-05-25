@@ -1,0 +1,36 @@
+---
+description: Bump VERSION (semver) when infra or public contract changes ship
+alwaysApply: true
+---
+
+# Semantic versioning (mealr-api-gateway)
+
+The repo version lives in **`VERSION`** (single line, `MAJOR.MINOR.PATCH`). Update it **in the same change** whenever you merge meaningful work — do not leave version bumps for a follow-up commit.
+
+## When to bump
+
+| Bump | When | Examples in this repo |
+| --- | --- | --- |
+| **PATCH** | Backward-compatible fixes; no deploy/config contract change | Docs/README only, Cursor rules, comments, troubleshooting text |
+| **MINOR** | Backward-compatible behavior or config **additions** | New `_MAPPINGS` entry + optional/new `cdk-params` key, new stack output, new optional domain behavior |
+| **MAJOR** | Breaking changes for operators or downstream consumers | Remove/rename **required** `cdk-params` keys, change `ApiMappingKey` base paths, change default export name, remove a path mapping, require new deploy steps that break existing `cdk-params.json` |
+
+If a change mixes levels, use the **highest** applicable bump.
+
+## Do not bump
+
+- Edits to **`cdk-params.json`** only (gitignored, local).
+- WIP or unreleased experiments you are not committing.
+- Reverts that restore prior behavior (bump only if the reverted release had already shipped a higher `VERSION` — then bump PATCH to reflect the fix release).
+
+## How to bump
+
+1. Read current version from `VERSION`.
+2. Increment per [semver.org](https://semver.org/) rules above.
+3. Write the new version as the **only** line in `VERSION` (no `v` prefix, no trailing newline required but one is fine).
+4. Include the new version in the **commit message** (e.g. `Add /foo mapping (v0.3.0)` or `Bump version to 0.2.1` for doc-only PATCH).
+
+## Coordination
+
+- If **`README.md`** changes for the same work, follow `.cursor/rules/readme-sync.mdc` as well.
+- Do not duplicate version in multiple files — **`VERSION` is the source of truth**.
