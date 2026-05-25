@@ -40,9 +40,10 @@ DNS  api.mealr.com
          ▼
 AWS API Gateway Custom Domain
          │
-         ├── /recipes    ──►  mealr-recipes-api    HTTP API ($default)
-         ├── /meal-plans ──►  mealr-meal-plans-api HTTP API ($default)
-         └── /ai         ──►  mealr-ai-api         HTTP API ($default)
+         ├── /recipes         ──►  mealr-recipes-api         HTTP API ($default)
+         ├── /meal-plans      ──►  mealr-meal-plans-api      HTTP API ($default)
+         ├── /shopping-lists  ──►  mealr-shopping-list-api   HTTP API ($default)
+         └── /ai              ──►  mealr-ai-api              HTTP API ($default)
 ```
 
 Each downstream API Gateway handles its own routing, Lambda integrations, and Cognito JWT authorizer. API Gateway **strips the base-path prefix** before forwarding, so a request to `api.mealr.com/recipes/abc` reaches the recipes API at `GET /abc`.
@@ -55,6 +56,7 @@ Each downstream API Gateway handles its own routing, Lambda integrations, and Co
 | --- | --- |
 | `/recipes` | mealr-recipes-api |
 | `/meal-plans` | mealr-meal-plans-api |
+| `/shopping-lists` | mealr-shopping-list-api |
 | `/ai` | mealr-ai-api |
 
 ---
@@ -63,7 +65,7 @@ Each downstream API Gateway handles its own routing, Lambda integrations, and Co
 
 | Path | Purpose |
 | --- | --- |
-| `infra/gateway_stack.py` | CDK stack: `CfnDomainName` + three `CfnApiMapping` resources |
+| `infra/gateway_stack.py` | CDK stack: `CfnDomainName` + four `CfnApiMapping` resources |
 | `infra/config.py` | Loads and validates `cdk-params.json` at synth time |
 | `app.py` | CDK `App` entrypoint; synth writes to `cdk.out/` |
 | `cdk.json` | CDK CLI config; `app` runs `.venv/bin/python app.py` |
@@ -80,7 +82,7 @@ Each downstream API Gateway handles its own routing, Lambda integrations, and Co
 - **AWS credentials** for the account/region you deploy to.
 - **CDK CLI** from the venv (`pip install -r requirements-dev.txt`). `cdk.json` runs the app via `.venv/bin/python app.py`.
 - An **ACM certificate** in the same region as your API Gateway, valid for the custom domain.
-- Downstream stacks (**mealr-recipes-api**, **mealr-meal-plans-api**, **mealr-ai-api**) must already be deployed and expose their **HTTP API IDs** (see [Wire downstream API IDs](#wire-downstream-api-ids)).
+- Downstream stacks (**mealr-recipes-api**, **mealr-meal-plans-api**, **mealr-shopping-list-api**, **mealr-ai-api**) must already be deployed and expose their **HTTP API IDs** (see [Wire downstream API IDs](#wire-downstream-api-ids)).
 
 > No CDK bootstrap required — this stack has no Lambda assets or S3 uploads.
 
@@ -101,6 +103,7 @@ cp cdk-params.example.json cdk-params.json
 | `ApiDomainCertificateArn` | Yes | ACM certificate ARN in this region |
 | `RecipesApiId` | Yes | HTTP API ID from mealr-recipes-api |
 | `MealPlansApiId` | Yes | HTTP API ID from mealr-meal-plans-api |
+| `ShoppingListsApiId` | Yes | HTTP API ID from mealr-shopping-list-api (`ShoppingApiId` output) |
 | `AiApiId` | Yes | HTTP API ID from mealr-ai-api |
 | `ApiEndpointExportName` | No | CloudFormation export name for `CustomDomainTarget` (default `mealr-api-gateway-CustomDomainTarget`) |
 
@@ -142,9 +145,10 @@ Each downstream stack must output (and ideally export) its **HTTP API ID**. Reco
 | --- | --- |
 | mealr-recipes-api | `mealr-recipes-api-HttpApiId` |
 | mealr-meal-plans-api | `mealr-meal-plans-api-HttpApiId` |
+| mealr-shopping-list-api | `ShoppingApiId` stack output |
 | mealr-ai-api | `mealr-ai-api-HttpApiId` |
 
-Look up or export those values and put them in `cdk-params.json` as `RecipesApiId`, `MealPlansApiId`, `AiApiId`.
+Look up or export those values and put them in `cdk-params.json` as `RecipesApiId`, `MealPlansApiId`, `ShoppingListsApiId`, `AiApiId`.
 
 **Path stripping reminder:** API Gateway strips the base-path prefix before forwarding. Routes in each downstream API should be defined _without_ the service prefix:
 
@@ -152,6 +156,8 @@ Look up or export those values and put them in `cdk-params.json` as `RecipesApiI
 | --- | --- |
 | `GET /recipes/abc` | `GET /abc` |
 | `POST /meal-plans/generate` | `POST /generate` |
+| `POST /shopping-lists/` | `POST /` |
+| `GET /shopping-lists/{id}` | `GET /{id}` |
 | `POST /ai/query` | `POST /query` |
 
 ---

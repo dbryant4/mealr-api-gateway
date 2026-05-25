@@ -11,6 +11,7 @@ _MAPPINGS: list[tuple[str, str]] = [
     ("recipes", "Recipes"),
     ("meal-plans", "MealPlans"),
     ("ai", "Ai"),
+    ("shopping-lists", "ShoppingLists"),
 ]
 
 
@@ -47,6 +48,7 @@ class GatewayStack(Stack):
             "Recipes": config.recipes_api_id,
             "MealPlans": config.meal_plans_api_id,
             "Ai": config.ai_api_id,
+            "ShoppingLists": config.shopping_lists_api_id,
         }
 
         for base_path, logical_id in _MAPPINGS:

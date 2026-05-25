@@ -5,6 +5,7 @@
     "RecipesApiId": "xxxxxxxxxx",
     "MealPlansApiId": "xxxxxxxxxx",
     "AiApiId": "xxxxxxxxxx",
+    "ShoppingListsApiId": "xxxxxxxxxx",
     "ApiEndpointExportName": "mealr-api-gateway-CustomDomainTarget"
   }
 }

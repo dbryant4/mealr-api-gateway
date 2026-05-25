@@ -15,6 +15,7 @@ REQUIRED_KEYS = (
     "RecipesApiId",
     "MealPlansApiId",
     "AiApiId",
+    "ShoppingListsApiId",
 )
 
 
@@ -25,6 +26,7 @@ class GatewayConfig:
     recipes_api_id: str
     meal_plans_api_id: str
     ai_api_id: str
+    shopping_lists_api_id: str
     api_endpoint_export_name: str = "mealr-api-gateway-CustomDomainTarget"
 
     @classmethod
@@ -55,6 +57,7 @@ class GatewayConfig:
             recipes_api_id=params["RecipesApiId"],
             meal_plans_api_id=params["MealPlansApiId"],
             ai_api_id=params["AiApiId"],
+            shopping_lists_api_id=params["ShoppingListsApiId"],
             api_endpoint_export_name=params.get(
                 "ApiEndpointExportName", "mealr-api-gateway-CustomDomainTarget"
             ),
