@@ -14,7 +14,7 @@ REQUIRED_KEYS = (
     "ApiDomainCertificateArn",
     "RecipesApiId",
     "MealPlansApiId",
-    "AiApiId",
+    "AskApiId",
     "ShoppingListsApiId",
 )
 
@@ -25,7 +25,7 @@ class GatewayConfig:
     api_domain_certificate_arn: str
     recipes_api_id: str
     meal_plans_api_id: str
-    ai_api_id: str
+    ask_api_id: str
     shopping_lists_api_id: str
     api_endpoint_export_name: str = "mealr-api-gateway-CustomDomainTarget"
 
@@ -56,7 +56,7 @@ class GatewayConfig:
             api_domain_certificate_arn=params["ApiDomainCertificateArn"],
             recipes_api_id=params["RecipesApiId"],
             meal_plans_api_id=params["MealPlansApiId"],
-            ai_api_id=params["AiApiId"],
+            ask_api_id=params["AskApiId"],
             shopping_lists_api_id=params["ShoppingListsApiId"],
             api_endpoint_export_name=params.get(
                 "ApiEndpointExportName", "mealr-api-gateway-CustomDomainTarget"

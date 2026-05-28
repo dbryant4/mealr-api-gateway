@@ -11,7 +11,7 @@ from infra.config import GatewayConfig
 _VERSION = Path(__file__).resolve().parent.parent.joinpath("VERSION").read_text().strip()
 _STACK_DESCRIPTION = (
     f"Mealr unified API gateway v{_VERSION}: regional custom domain and HTTP API "
-    "v2 base-path mappings (/recipes, /meal-plans, /shopping-lists, /ai) to "
+    "v2 base-path mappings (/recipes, /meal-plans, /shopping-lists, /ask) to "
     "downstream service APIs. No Lambda, JWT, CORS, or business logic in this stack."
 )
 
@@ -19,7 +19,7 @@ _STACK_DESCRIPTION = (
 _MAPPINGS: list[tuple[str, str]] = [
     ("recipes", "Recipes"),
     ("meal-plans", "MealPlans"),
-    ("ai", "Ai"),
+    ("ask", "Ask"),
     ("shopping-lists", "ShoppingLists"),
 ]
 
@@ -56,7 +56,7 @@ class GatewayStack(Stack):
         api_ids = {
             "Recipes": config.recipes_api_id,
             "MealPlans": config.meal_plans_api_id,
-            "Ai": config.ai_api_id,
+            "Ask": config.ask_api_id,
             "ShoppingLists": config.shopping_lists_api_id,
         }
 
