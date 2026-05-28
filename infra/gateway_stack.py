@@ -11,16 +11,15 @@ from infra.config import GatewayConfig
 _VERSION = Path(__file__).resolve().parent.parent.joinpath("VERSION").read_text().strip()
 _STACK_DESCRIPTION = (
     f"Mealr unified API gateway v{_VERSION}: regional custom domain and HTTP API "
-    "v2 base-path mappings (/recipes, /meal-plans, /shopping-lists, /ask) to "
+    "v2 base-path mappings (/recipes, /shopping-lists, /ask) to "
     "downstream service APIs. No Lambda, JWT, CORS, or business logic in this stack."
 )
 
-# base-path prefix → (downstream API ID field, logical CDK id suffix)
-_MAPPINGS: list[tuple[str, str]] = [
-    ("recipes", "Recipes"),
-    ("meal-plans", "MealPlans"),
-    ("ask", "Ask"),
-    ("shopping-lists", "ShoppingLists"),
+# base-path prefix → (logical CDK id suffix, config field for resolved API ID)
+_MAPPINGS: list[tuple[str, str, str]] = [
+    ("recipes", "Recipes", "recipes_api_id"),
+    ("ask", "Ask", "ask_api_id"),
+    ("shopping-lists", "ShoppingLists", "shopping_lists_api_id"),
 ]
 
 
@@ -53,18 +52,11 @@ class GatewayStack(Stack):
             ],
         )
 
-        api_ids = {
-            "Recipes": config.recipes_api_id,
-            "MealPlans": config.meal_plans_api_id,
-            "Ask": config.ask_api_id,
-            "ShoppingLists": config.shopping_lists_api_id,
-        }
-
-        for base_path, logical_id in _MAPPINGS:
+        for base_path, logical_id, config_field in _MAPPINGS:
             apigw.CfnApiMapping(
                 self,
                 f"{logical_id}ApiMapping",
-                api_id=api_ids[logical_id],
+                api_id=getattr(config, config_field),
                 domain_name=domain.ref,
                 stage="$default",
                 api_mapping_key=base_path,

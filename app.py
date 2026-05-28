@@ -9,7 +9,12 @@ from infra.gateway_stack import GatewayStack
 
 def main() -> None:
     app = cdk.App(outdir="cdk.out")
-    GatewayStack(app, "MealrApiGateway", config=GatewayConfig.load())
+    region = app.node.try_get_context("region")
+    GatewayStack(
+        app,
+        "MealrApiGateway",
+        config=GatewayConfig.load(region=region, context=app.node.get_all_context()),
+    )
     app.synth()
 
 
