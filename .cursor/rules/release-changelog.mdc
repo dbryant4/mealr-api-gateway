@@ -1,0 +1,101 @@
+---
+description: GitHub release notes must follow Keep a Changelog format (with project emoji headings)
+alwaysApply: false
+---
+
+# Release changelog (Keep a Changelog)
+
+Use this rule whenever creating or editing a **GitHub release** (`gh release create`, release notes, tag message).
+
+Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) — newest release first, semantic version tags (`v1.2.0`), present tense (“Add”, not “Added”).
+
+## Title
+
+```
+vX.Y.Z — short human summary (≤ ~60 chars)
+```
+
+## Required sections (in order)
+
+Use these **emoji headings** for every release. Omit a section only when empty; write `_None in this release._` under **🐛 Bug Fixes** when there are no fixes.
+
+| Heading | Keep a Changelog type | Contents |
+|--------|------------------------|----------|
+| **Overview** | — | 1–3 sentences: version, theme, who should care |
+| **✨ Features** | Added | New user-visible capabilities, schema fields, migrations |
+| **🔧 Enhancements** | Changed | Improvements to existing behavior (non-breaking) |
+| **🐛 Bug Fixes** | Fixed | Bug fixes |
+| **⚠️ Breaking Changes** | Removed / breaking Changed | Major bumps only; migration path |
+| **🔒 Security** | Security | CVEs, IAM hardening (rare) |
+| **📦 Infrastructure** | Changed (infra) | CDK, custom domain, base-path mappings, `cdk-params` contract, CloudFormation exports |
+| **🧪 Testing** | — | New/changed tests, golden updates |
+| **📚 Documentation** | — | README, path mappings table, stack parameters |
+| **⬆️ Upgrade notes** | — | Numbered deploy / migration / consumer steps |
+| **🔗 Full changelog** | — | Compare link + optional commit table |
+
+Link the compare URL: `https://github.com/dbryant4/mealr-api-gateway/compare/vPREV...vNEW`
+
+## Writing rules
+
+- Bullet lists; one change per bullet; lead with the **what**, then brief **why** if non-obvious.
+- Reference **`VERSION`**, `cdk-params.json` keys, base paths (`/recipes`, `/ask`, etc.), and downstream stack names when relevant.
+- **Upgrade notes** must include deploy order when downstream stacks change (service APIs first, then gateway); call out required `cdk-params.json` edits and **`cloudformation:DescribeStacks`** at synth time.
+- Align release version with **`VERSION`** and **`.cursor/rules/semver.mdc`**.
+- Do **not** edit past GitHub release bodies unless fixing a typo — add a new patch release instead.
+
+## `gh release create` template
+
+```bash
+gh release create vX.Y.Z \
+  --title "vX.Y.Z — short summary" \
+  --notes "$(cat <<'EOF'
+## Overview
+
+…
+
+---
+
+## ✨ Features
+
+- …
+
+## 🔧 Enhancements
+
+- …
+
+## 🐛 Bug Fixes
+
+_None in this release._
+
+## 📦 Infrastructure
+
+- …
+
+## 🧪 Testing
+
+- …
+
+## 📚 Documentation
+
+- …
+
+## ⬆️ Upgrade notes
+
+1. Deploy downstream API stacks (if their `ApiId` output or exports changed).
+2. `cdk deploy` in mealr-api-gateway.
+3. …
+
+---
+
+## 🔗 Full changelog
+
+**vPREV → vX.Y.Z** ([compare](https://github.com/dbryant4/mealr-api-gateway/compare/vPREV...vX.Y.Z))
+EOF
+)"
+```
+
+## Do not
+
+- Ship a release without a compare link or upgrade notes when deploy/config changes are required.
+- Use marketing fluff without concrete bullets.
+- Duplicate the entire PR description — release notes are for **operators and API consumers**, not code review.

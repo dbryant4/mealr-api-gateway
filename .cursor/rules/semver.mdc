@@ -34,3 +34,4 @@ If a change mixes levels, use the **highest** applicable bump.
 
 - If **`README.md`** changes for the same work, follow `.cursor/rules/readme-sync.mdc` as well.
 - Do not duplicate version in multiple files — **`VERSION` is the source of truth**.
+- When shipping a release, create a GitHub tag **`vX.Y.Z`** with notes per **`.cursor/rules/release-changelog.mdc`** (Keep a Changelog format, compare link, upgrade notes).
