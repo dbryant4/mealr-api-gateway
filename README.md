@@ -42,6 +42,7 @@ DNS  api.mealr.com
          ▼
 AWS API Gateway Custom Domain
          │
+         ├── /account         ──►  mealr-account-api         HTTP API ($default)
          ├── /recipes         ──►  mealr-recipes-api         HTTP API ($default)
          ├── /shopping-lists  ──►  mealr-shopping-list-api   HTTP API ($default)
          └── /ask              ──►  mealr-kb-api              HTTP API ($default)
@@ -57,6 +58,7 @@ At synth time, this stack reads each downstream stack's **`ApiId`** output via C
 
 | Base path | Downstream service | Default stack name |
 | --- | --- | --- |
+| `/account` | mealr-account-api | `MealrAccountApiStack` |
 | `/recipes` | mealr-recipes-api | `MealrRecipesApiStack` |
 | `/shopping-lists` | mealr-shopping-list-api | `MealrShoppingApiStack` |
 | `/ask` | mealr-kb-api | `MealrKbApiStack` |
@@ -68,7 +70,7 @@ At synth time, this stack reads each downstream stack's **`ApiId`** output via C
 | Path | Purpose |
 | --- | --- |
 | `VERSION` | Semver for this repo (`MAJOR.MINOR.PATCH`); bump per `.cursor/rules/semver.mdc` |
-| `infra/gateway_stack.py` | CDK stack: `CfnDomainName` + three `CfnApiMapping` resources |
+| `infra/gateway_stack.py` | CDK stack: `CfnDomainName` + four `CfnApiMapping` resources |
 | `infra/config.py` | Loads `cdk-params.json` and resolves downstream `ApiId` outputs at synth time |
 | `app.py` | CDK `App` entrypoint; synth writes to `cdk.out/` |
 | `cdk.json` | CDK CLI config; `app` runs `.venv/bin/python app.py` |
@@ -85,7 +87,7 @@ At synth time, this stack reads each downstream stack's **`ApiId`** output via C
 - **AWS credentials** for the account/region you deploy to, with **`cloudformation:DescribeStacks`** (used at synth time to read downstream `ApiId` outputs).
 - **CDK CLI** from the venv (`pip install -r requirements-dev.txt`). `cdk.json` runs the app via `.venv/bin/python app.py`.
 - An **ACM certificate** in the same region as your API Gateway, valid for the custom domain.
-- Downstream stacks (**mealr-recipes-api**, **mealr-shopping-list-api**, **mealr-kb-api**) must already be deployed with an **`ApiId`** stack output (see [Wire downstream stacks](#wire-downstream-stacks)).
+- Downstream stacks (**mealr-account-api**, **mealr-recipes-api**, **mealr-shopping-list-api**, **mealr-kb-api**) must already be deployed with an **`ApiId`** stack output (see [Wire downstream stacks](#wire-downstream-stacks)).
 
 > No CDK bootstrap required — this stack has no Lambda assets or S3 uploads.
 
@@ -104,6 +106,7 @@ cp cdk-params.example.json cdk-params.json
 | --- | --- | --- | --- |
 | `ApiDomainName` | Yes | — | Custom domain hostname (e.g. `api.mealr.com`) |
 | `ApiDomainCertificateArn` | Yes | — | ACM certificate ARN in this region |
+| `AccountApiStackName` | No | `MealrAccountApiStack` | CloudFormation stack for `/account` mapping |
 | `RecipesApiStackName` | No | `MealrRecipesApiStack` | CloudFormation stack for `/recipes` mapping |
 | `ShoppingListsApiStackName` | No | `MealrShoppingApiStack` | CloudFormation stack for `/shopping-lists` mapping |
 | `AskApiStackName` | No | `MealrKbApiStack` | CloudFormation stack for `/ask` mapping |
@@ -113,6 +116,7 @@ cp cdk-params.example.json cdk-params.json
 
 | Context key | Purpose |
 | --- | --- |
+| `accountApiId` | Override resolved account HTTP API ID |
 | `recipesApiId` | Override resolved recipes HTTP API ID |
 | `shoppingListsApiId` | Override resolved shopping-lists HTTP API ID |
 | `askApiId` | Override resolved ask HTTP API ID |
@@ -122,6 +126,7 @@ Example:
 
 ```bash
 cdk synth \
+  -c accountApiId=xyz000 \
   -c recipesApiId=abc123 \
   -c shoppingListsApiId=def456 \
   -c askApiId=ghi789
@@ -163,6 +168,7 @@ Each downstream stack outputs **`ApiId`** and exports it for cross-stack use:
 
 | Service repo | Default stack name | CloudFormation export | Gateway base path |
 | --- | --- | --- | --- |
+| mealr-account-api | `MealrAccountApiStack` | `AccountApiId` | `/account` |
 | mealr-recipes-api | `MealrRecipesApiStack` | `RecipesApiId` | `/recipes` |
 | mealr-shopping-list-api | `MealrShoppingApiStack` | `ShoppingListsApiId` | `/shopping-lists` |
 | mealr-kb-api | `MealrKbApiStack` | `AskApiId` | `/ask` |
@@ -178,6 +184,7 @@ If you renamed a downstream stack, set the matching `*ApiStackName` key in `cdk-
 
 | Request to custom domain | Forwarded to downstream API as |
 | --- | --- |
+| `GET /account/profile` | `GET /profile` |
 | `GET /recipes/abc` | `GET /abc` |
 | `POST /shopping-lists/` | `POST /` |
 | `GET /shopping-lists/{id}` | `GET /{id}` |
@@ -212,8 +219,8 @@ All other errors (auth, validation, business logic) are owned by the downstream 
 | Symptom | Things to check |
 | --- | --- |
 | `cdk synth` fails: missing `cdk-params.json` | Run `cp cdk-params.example.json cdk-params.json` and fill in required keys. |
-| `cdk synth` fails: could not find output `ApiId` | Deploy the downstream stack first, or fix `*ApiStackName` in `cdk-params.json`. Shopping stack output key is **`ApiId`** (not `ShoppingApiId`). |
-| `cdk synth` fails: AWS credentials / `DescribeStacks` | Use valid AWS credentials, or pass `-c recipesApiId=...` (and shopping/ask) to skip lookup. |
+| `cdk synth` fails: could not find output `ApiId` | Deploy the downstream stack first, or fix `*ApiStackName` in `cdk-params.json`. All downstream stacks export **`ApiId`**. |
+| `cdk synth` fails: AWS credentials / `DescribeStacks` | Use valid AWS credentials, or pass `-c accountApiId=...` (and recipes/shopping/ask) to skip lookup. |
 | `cdk` command not found | Activate the venv or run `.venv/bin/cdk`. |
 | Deploy fails: certificate not found / not valid | ACM cert must be in the **same region** as the stack and in `ISSUED` status. |
 | DNS not resolving after deploy | Check that the `A`/`CNAME` record points to the `CustomDomainTarget` output, not the API execute URL. |

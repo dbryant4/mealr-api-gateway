@@ -14,6 +14,7 @@ STACK_NAME = "MealrApiGateway"
 PARAMS_PATH = Path(__file__).resolve().parent.parent / "cdk-params.json"
 API_ID_OUTPUT_KEY = "ApiId"
 
+DEFAULT_ACCOUNT_API_STACK_NAME = "MealrAccountApiStack"
 DEFAULT_RECIPES_API_STACK_NAME = "MealrRecipesApiStack"
 DEFAULT_SHOPPING_LISTS_API_STACK_NAME = "MealrShoppingApiStack"
 DEFAULT_ASK_API_STACK_NAME = "MealrKbApiStack"
@@ -42,9 +43,11 @@ def _get_stack_output(region: str, stack_name: str, output_key: str) -> str:
 class GatewayConfig:
     api_domain_name: str
     api_domain_certificate_arn: str
+    account_api_id: str
     recipes_api_id: str
     shopping_lists_api_id: str
     ask_api_id: str
+    account_api_stack_name: str = DEFAULT_ACCOUNT_API_STACK_NAME
     recipes_api_stack_name: str = DEFAULT_RECIPES_API_STACK_NAME
     shopping_lists_api_stack_name: str = DEFAULT_SHOPPING_LISTS_API_STACK_NAME
     ask_api_stack_name: str = DEFAULT_ASK_API_STACK_NAME
@@ -87,12 +90,16 @@ class GatewayConfig:
             or "us-east-1"
         )
 
+        account_stack = params.get("AccountApiStackName", DEFAULT_ACCOUNT_API_STACK_NAME)
         recipes_stack = params.get("RecipesApiStackName", DEFAULT_RECIPES_API_STACK_NAME)
         shopping_stack = params.get(
             "ShoppingListsApiStackName", DEFAULT_SHOPPING_LISTS_API_STACK_NAME
         )
         ask_stack = params.get("AskApiStackName", DEFAULT_ASK_API_STACK_NAME)
 
+        account_api_id = ctx.get("accountApiId") or _get_stack_output(
+            deploy_region, account_stack, API_ID_OUTPUT_KEY
+        )
         recipes_api_id = ctx.get("recipesApiId") or _get_stack_output(
             deploy_region, recipes_stack, API_ID_OUTPUT_KEY
         )
@@ -106,9 +113,11 @@ class GatewayConfig:
         return cls(
             api_domain_name=params["ApiDomainName"],
             api_domain_certificate_arn=params["ApiDomainCertificateArn"],
+            account_api_id=account_api_id,
             recipes_api_id=recipes_api_id,
             shopping_lists_api_id=shopping_lists_api_id,
             ask_api_id=ask_api_id,
+            account_api_stack_name=account_stack,
             recipes_api_stack_name=recipes_stack,
             shopping_lists_api_stack_name=shopping_stack,
             ask_api_stack_name=ask_stack,

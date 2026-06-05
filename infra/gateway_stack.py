@@ -11,12 +11,13 @@ from infra.config import GatewayConfig
 _VERSION = Path(__file__).resolve().parent.parent.joinpath("VERSION").read_text().strip()
 _STACK_DESCRIPTION = (
     f"Mealr unified API gateway v{_VERSION}: regional custom domain and HTTP API "
-    "v2 base-path mappings (/recipes, /shopping-lists, /ask) to "
+    "v2 base-path mappings (/recipes, /shopping-lists, /ask, /account) to "
     "downstream service APIs. No Lambda, JWT, CORS, or business logic in this stack."
 )
 
 # base-path prefix → (logical CDK id suffix, config field for resolved API ID)
 _MAPPINGS: list[tuple[str, str, str]] = [
+    ("account", "Account", "account_api_id"),
     ("recipes", "Recipes", "recipes_api_id"),
     ("ask", "Ask", "ask_api_id"),
     ("shopping-lists", "ShoppingLists", "shopping_lists_api_id"),
