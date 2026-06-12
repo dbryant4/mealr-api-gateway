@@ -11,7 +11,6 @@ Owns the **custom domain** (`api.mealr.com`) and **base-path mappings** that rou
 - [What this repo owns](#what-this-repo-owns)
 - [Platform architecture](#platform-architecture)
 - [Repository architecture](#repository-architecture)
-- [Architecture](#architecture)
 - [Path mappings](#path-mappings)
 - [Repository layout](#repository-layout)
 - [Prerequisites](#prerequisites)
@@ -45,22 +44,6 @@ Mermaid overview of the **whole Mealr system**: [`docs/ARCHITECTURE.md`](docs/AR
 ## Repository architecture
 
 Mermaid diagram of **this repository**: [`docs/REPO_ARCHITECTURE.md`](docs/REPO_ARCHITECTURE.md).
-
----
-
-## Architecture
-
-```text
-DNS  api.mealr.com
-         │
-         ▼
-AWS API Gateway Custom Domain
-         │
-         ├── /account         ──►  mealr-account-api         HTTP API ($default)
-         ├── /recipes         ──►  mealr-recipes-api         HTTP API ($default)
-         ├── /shopping-lists  ──►  mealr-shopping-list-api   HTTP API ($default)
-         └── /ask              ──►  mealr-kb-api              HTTP API ($default)
-```
 
 Each downstream API Gateway handles its own routing, Lambda integrations, and Cognito JWT authorizer. API Gateway **strips the base-path prefix** before forwarding, so a request to `api.mealr.com/recipes/abc` reaches the recipes API at `GET /abc`.
 

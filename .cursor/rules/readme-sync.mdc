@@ -29,3 +29,8 @@ When the change warrants a version bump, follow **`.cursor/rules/semver.mdc`** a
 
 - Prefer **accurate, minimal edits** over duplicating large blocks of infra code in the README.
 - If you rename or remove a path or script, **grep the repo** for old references and fix README matches.
+
+## Architecture documentation
+
+Do **not** embed architecture **diagrams** (ASCII art, Mermaid, or flow charts) in **`README.md`**. Link to **`docs/ARCHITECTURE.md`** (platform) and **`docs/REPO_ARCHITECTURE.md`** (this repo) from the **Platform architecture** / **Repository architecture** sections only.
+

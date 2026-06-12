@@ -10,7 +10,7 @@ alwaysApply: true
 - **`docs/ARCHITECTURE.md`** is the **GitHub-rendered**, platform-wide architecture doc (Mermaid diagrams + gateway table + repository map). **This repo's internal stack** is **`docs/REPO_ARCHITECTURE.md`** — see **`repo-architecture-sync.mdc`** (not this file).
 - Whenever a change affects **how Mealr services connect** (not just this repo in isolation), update **`docs/ARCHITECTURE.md` in the same change** — **no follow-up todos**.
 - **Shared sections must stay identical** across all nine Mealr repositories (diagrams, auth sequence, gateway table, ingest/KB flow). Only **`## This repository`** and the **blue highlight** on the system-overview node differ per repo.
-- Do **not** duplicate long architecture prose in **`README.md`** — link to **`docs/ARCHITECTURE.md`** (platform) and **`docs/REPO_ARCHITECTURE.md`** (this repo only; see **`repo-architecture-sync.mdc`**).
+- Do **not** embed architecture **diagrams** (ASCII, Mermaid, flow charts) or long architecture prose in **`README.md`** — link to **`docs/ARCHITECTURE.md`** (platform) and **`docs/REPO_ARCHITECTURE.md`** (this repo only; see **`repo-architecture-sync.mdc`**).
 
 ## When `docs/ARCHITECTURE.md` must be edited (blocking)
 
