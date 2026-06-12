@@ -9,7 +9,7 @@ When you change anything that affects **how the repo is used, deployed, or teste
 
 ## Triggers (non-exhaustive)
 
-- **`infra/gateway_stack.py`**, **`infra/config.py`**: path mappings, `_MAPPINGS` list, config keys, outputs/exports, custom domain behavior.
+- **`infra/gateway_stack.py`**, **`infra/config.py`**: path mappings, `_MAPPINGS` list, config keys, outputs/exports, custom domain behavior — also update **`docs/ARCHITECTURE.md`** per **`architecture-sync.mdc`** and **`docs/REPO_ARCHITECTURE.md`** per **`repo-architecture-sync.mdc`**.
 - **`app.py`**, **`cdk.json`**, **`requirements.txt`**, **`requirements-dev.txt`**, **`VERSION`**
 - **`cdk-params.example.json`**, **`.gitignore`**
 
@@ -18,7 +18,7 @@ When the change warrants a version bump, follow **`.cursor/rules/semver.mdc`** a
 ## What to keep aligned
 
 1. **Table of contents** — Add/remove major sections; fix GitHub anchor links if headings change (see `.cursor/rules/markdown-toc.mdc` for TOC conventions).
-2. **Repository layout** table — Paths, filenames, and what each artifact does.
+2. **Repository layout** table — Paths, filenames, and what each artifact does (include **`docs/REPO_ARCHITECTURE.md`**).
 3. **Path mappings** table — Must match every entry in `_MAPPINGS` in `infra/gateway_stack.py`.
 4. **Stack parameters** table — Must match `REQUIRED_KEYS` and optional fields in `infra/config.py`.
 5. **Prerequisites** — Python version, CDK CLI, ACM cert, downstream deploy requirements.

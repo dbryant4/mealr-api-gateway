@@ -1,0 +1,45 @@
+---
+description: Keep docs/ARCHITECTURE.md aligned with the Mealr platform (Mermaid)
+alwaysApply: true
+---
+
+# Platform architecture sync (`docs/ARCHITECTURE.md`)
+
+## Mandatory
+
+- **`docs/ARCHITECTURE.md`** is the **GitHub-rendered**, platform-wide architecture doc (Mermaid diagrams + gateway table + repository map). **This repo's internal stack** is **`docs/REPO_ARCHITECTURE.md`** — see **`repo-architecture-sync.mdc`** (not this file).
+- Whenever a change affects **how Mealr services connect** (not just this repo in isolation), update **`docs/ARCHITECTURE.md` in the same change** — **no follow-up todos**.
+- **Shared sections must stay identical** across all nine Mealr repositories (diagrams, auth sequence, gateway table, ingest/KB flow). Only **`## This repository`** and the **blue highlight** on the system-overview node differ per repo.
+- Do **not** duplicate long architecture prose in **`README.md`** — link to **`docs/ARCHITECTURE.md`** (platform) and **`docs/REPO_ARCHITECTURE.md`** (this repo only; see **`repo-architecture-sync.mdc`**).
+
+## When `docs/ARCHITECTURE.md` must be edited (blocking)
+
+- **mealr-api-gateway** — base paths, custom domain, downstream stack names, path-stripping behaviour
+- **mealr-auth** — Cognito flows, MFA, token types, Managed Login / passkey entry points
+- **mealr-web** — new API consumers, env vars for API hosts, major UI flows that call new backends
+- **HTTP APIs** — new routes or integrations visible to other services (also update **`openapi/`** per **`openapi-sync.mdc`**)
+- **mealr-pdf-ingestor** — pipeline steps, buckets, DynamoDB tables, EventBridge triggers
+- **mealr-kb** — KB sync triggers, metadata, Bedrock ingestion
+- New repository in the Mealr system, renamed hostname (`app2` / `api2`), or removed service
+
+## Cross-repo obligation
+
+When **shared** diagram or table content changes, apply the **same edit** to **`docs/ARCHITECTURE.md`** in **every** Mealr repo in this workspace (or flag the user if only one repo is available). Then adjust each copy’s **`## This repository`** paragraph and Mermaid `style <node>` highlight:
+
+| Repository | Highlight node id in system overview |
+|------------|--------------------------------------|
+| mealr-web | `web` |
+| mealr-api-gateway | `gw` |
+| mealr-auth | `cognito` |
+| mealr-recipes-api | `recipes` |
+| mealr-shopping-list-api | `shopping` |
+| mealr-kb-api | `ask` |
+| mealr-account-api | `account` |
+| mealr-pdf-ingestor | `ingestor` |
+| mealr-kb | `kb` |
+
+## Agent behaviour
+
+- After gateway, auth, ingest, KB, or cross-service contract work, **re-read `docs/ARCHITECTURE.md`** and patch drift.
+- Keep the **Table of Contents** valid per **`markdown-toc.mdc`** when headings change.
+- **This repo** highlights **`gw`** in the system-overview diagram.

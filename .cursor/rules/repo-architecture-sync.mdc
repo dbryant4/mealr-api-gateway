@@ -1,0 +1,30 @@
+---
+description: Keep docs/REPO_ARCHITECTURE.md aligned with this repository's AWS layout
+alwaysApply: true
+---
+
+# Repository architecture sync (`docs/REPO_ARCHITECTURE.md`)
+
+## Mandatory
+
+- **`docs/REPO_ARCHITECTURE.md`** documents **this repository only** — internal components, Lambdas, data stores, and integrations shown as Mermaid diagrams.
+- Platform-wide context lives in **`docs/ARCHITECTURE.md`** — see **`architecture-sync.mdc`** (do not duplicate the full Mealr diagram here).
+- Update **`docs/REPO_ARCHITECTURE.md` in the same change** when this repo's deployable architecture changes — **no follow-up todos**.
+
+## When `docs/REPO_ARCHITECTURE.md` must be edited (blocking)
+
+- CDK / CloudFormation stack: new or removed resources, routes, Lambdas, queues, tables, buckets, env vars that change the diagram
+- Lambda responsibilities or handler routing (`handler.py`, `src/handlers/`, Step Functions graph)
+- New external integration (another stack's export, Bedrock, Cognito API surface)
+- Auth or data-flow change that alters the repo diagram (not merely HTTP JSON shapes — those are **`openapi/`** + **`api-docs-sync.mdc`** in API repos)
+
+## Do not
+
+- Hand-edit Mermaid to describe services **owned by other repos** beyond integration arrows — link to **`docs/ARCHITECTURE.md`** instead.
+- Replace **`openapi/openapi.yaml`** or **`docs/API.md`** with this file in API repos.
+
+## Agent behaviour
+
+- After editing **`infra/gateway_stack.py`** or primary application code under this repo's Lambdas/handlers, **re-read `docs/REPO_ARCHITECTURE.md`** and update diagrams and the components table if the picture changed.
+- Keep the **Table of Contents** valid per **`markdown-toc.mdc`** when headings change.
+- If README **Architecture** ASCII/text drifts from the Mermaid doc, add or fix a link to **`docs/REPO_ARCHITECTURE.md`** per **`readme-sync.mdc`** (prefer one canonical diagram in `docs/`).

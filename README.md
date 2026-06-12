@@ -9,6 +9,8 @@ Owns the **custom domain** (`api.mealr.com`) and **base-path mappings** that rou
 ## Table of contents
 
 - [What this repo owns](#what-this-repo-owns)
+- [Platform architecture](#platform-architecture)
+- [Repository architecture](#repository-architecture)
 - [Architecture](#architecture)
 - [Path mappings](#path-mappings)
 - [Repository layout](#repository-layout)
@@ -31,6 +33,18 @@ Owns the **custom domain** (`api.mealr.com`) and **base-path mappings** that rou
 - **CloudFormation export** of the regional domain target for DNS wiring.
 
 Nothing else. No routes, no Lambda, no IAM, no auth.
+
+---
+
+## Platform architecture
+
+Mermaid overview of the **whole Mealr system**: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
+
+---
+
+## Repository architecture
+
+Mermaid diagram of **this repository**: [`docs/REPO_ARCHITECTURE.md`](docs/REPO_ARCHITECTURE.md).
 
 ---
 
@@ -69,6 +83,8 @@ At synth time, this stack reads each downstream stack's **`ApiId`** output via C
 
 | Path | Purpose |
 | --- | --- |
+| `docs/ARCHITECTURE.md` | Platform-wide Mermaid architecture (all Mealr repos) |
+| `docs/REPO_ARCHITECTURE.md` | This repo's internal Mermaid architecture |
 | `VERSION` | Semver for this repo (`MAJOR.MINOR.PATCH`); bump per `.cursor/rules/semver.mdc` |
 | `infra/gateway_stack.py` | CDK stack: `CfnDomainName` + four `CfnApiMapping` resources |
 | `infra/config.py` | Loads `cdk-params.json` and resolves downstream `ApiId` outputs at synth time |
